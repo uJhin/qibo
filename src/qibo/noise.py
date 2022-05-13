@@ -64,7 +64,7 @@ class NoiseModel():
     def __init__(self):
         self.errors = {}
 
-    def add(self, error, gate, qubits=None):
+    def add(self, error, gate, source_qubits=None, target_qubits=None):
         """Add a quantum error for a specific gate and qubit to the noise model.
 
             Args:
@@ -77,10 +77,12 @@ class NoiseModel():
                                 will be added after every instance of the gate.
         """
 
-        if isinstance(qubits, int):
-            qubits = (qubits, )
+        if isinstance(source_qubits, int):
+            qubits = (source_qubits, )
+        if isinstance(target_qubits, int):
+            target_qubits = (target_qubits, )
 
-        self.errors[gate] = (error, qubits)
+        self.errors[gate] = (error, qubits, target_qubits)
 
     def apply(self, circuit):
         """Generate a noisy quantum circuit according to the noise model built.
@@ -97,11 +99,16 @@ class NoiseModel():
         for gate in circuit.queue:
             noisy_circuit.add(gate)
             if gate.__class__ in self.errors:
-                error, qubits = self.errors.get(gate.__class__)
-                if qubits is None:
+                error, source_qubits, target_qubits = self.errors.get(gate.__class__)
+                if source_qubits is None and target_qubits is None:
                     qubits = gate.qubits
+                elif source_qubits is None and target_qubits:
+                    qubits = target_qubits
+                elif source_qubits and target_qubits is None:
+                    qubits = tuple(set(gate.qubits) & set(source_qubits))
                 else:
-                    qubits = tuple(set(gate.qubits) & set(qubits))
+                    qubits = tuple(set(gate.qubits) & set(source_qubits))
+                    qubits = qubits if not qubits else target_qubits
                 for q in qubits:
                     noisy_circuit.add(error.channel(q, *error.options))
         noisy_circuit.parametrized_gates = list(circuit.parametrized_gates)
