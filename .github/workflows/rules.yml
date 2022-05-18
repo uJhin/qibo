@@ -27,10 +27,10 @@ jobs:
       if: startsWith(matrix.os, 'windows') == 0
       run: |
         pip install qibotf --pre
-    - name: Test with pylint
-      run: |
-        pip install pylint
-        pylint src -E -d E1123,E1120
+    # - name: Test with pylint
+    #   run: |
+    #     pip install pylint
+    #     pylint src -E -d E1123,E1120
     - name: Test with pytest core
       run: |
         pytest src/qibo/tests/ --skip-parallel --cov=qibo --cov-report=xml --pyargs qibo --durations=60
