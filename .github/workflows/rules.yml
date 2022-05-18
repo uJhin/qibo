@@ -22,7 +22,7 @@ jobs:
         pip install pytest-cov
         pip install .[tests,docs]
         pip install git+https://github.com/qiboteam/qibojit
-        # pip install tensorflow
+        pip install tensorflow
     # - name: Install qibotf
     #   if: startsWith(matrix.os, 'windows') == 0
     #   run: |
