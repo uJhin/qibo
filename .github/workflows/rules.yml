@@ -7,7 +7,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest] #, macos-latest, windows-latest]
         python-version: [3.7, 3.8, 3.9, '3.10']
     runs-on: ${{ matrix.os }}
     steps:
@@ -23,10 +23,10 @@ jobs:
         pip install .[tests,docs]
         pip install git+https://github.com/qiboteam/qibojit
         pip install tensorflow
-    # - name: Install qibotf
-    #   if: startsWith(matrix.os, 'windows') == 0
-    #   run: |
-    #     pip install qibotf --pre
+    - name: Install qibotf
+      if: startsWith(matrix.os, 'windows') == 0
+      run: |
+        pip install qibotf --pre
     # - name: Test with pylint
     #   run: |
     #     pip install pylint
@@ -34,15 +34,15 @@ jobs:
     - name: Test with pytest core
       run: |
         pytest src/qibo/tests/ --skip-parallel --cov=qibo --cov-report=xml --pyargs qibo --durations=60
-    - name: Test documentation examples
-      if: startsWith(matrix.os, 'ubuntu')
-      run: |
-        sudo apt install pandoc
-        make -C doc doctest
-    - name: Test examples
-      if: startsWith(matrix.os, 'ubuntu') && matrix.python-version == '3.9'
-      run: |
-        OMP_NUM_THREADS=1 pytest examples/
+    # - name: Test documentation examples
+    #   if: startsWith(matrix.os, 'ubuntu')
+    #   run: |
+    #     sudo apt install pandoc
+    #     make -C doc doctest
+    # - name: Test examples
+    #   if: startsWith(matrix.os, 'ubuntu') && matrix.python-version == '3.9'
+    #   run: |
+    #     OMP_NUM_THREADS=1 pytest examples/
     - name: Upload coverage to Codecov
       if: startsWith(matrix.os, 'ubuntu')
       uses: codecov/codecov-action@v2
