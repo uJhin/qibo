@@ -88,10 +88,16 @@ class QuantumCNN():
         c = Circuit(2)
         c.add(one_qubit_unitary(bits[0], symbols[0:3]))
         c.add(one_qubit_unitary(bits[1], symbols[3:6]))
-        #question: how to replace cirq.ZZ(*bits)**symbols[6]? qibo does not have XX, YY, ZZ.
-        c.add(symbols[6]*K.np.kron(gates.Z(bits[0]),gates.Z(bits[1])))
-        c.add(symbols[7]*K.np.kron(gates.Y(bits[0]),gates.Y(bits[1])))
-        c.add(symbols[8]*K.np.kron(gates.X(bits[0]),gates.X(bits[1])))
+        #to improve: to define new gates of XX YY and ZZ outside.
+        matrixXX = K.np.kron(matrices.X,matrices.X)
+        matrixYY = K.np.kron(matrices.Y,matrices.Y)
+        matrixZZ = K.np.kron(matrices.Z,matrices.Z)
+        '''gates.Unitary(matrixXX, 0, 1,name="XX")
+        gates.Unitary(matrixYY, 0, 1,name="YY")
+        gates.Unitary(matrixZZ, 0, 1,name="ZZ")'''
+        c.add(symbols[6]*gates.Unitary(matrixXX, 0, 1))
+        c.add(symbols[7]*gates.Unitary(matrixYY, 0, 1))
+        c.add(symbols[8]*gates.Unitary(matrixZZ, 0, 1))
         
         c.add(one_qubit_unitary(bits[0], symbols[9:12]))
         c.add(one_qubit_unitary(bits[1], symbols[12:]))
