@@ -79,7 +79,10 @@ class QuantumCNN():
         c.add(gates.RZ(bit,symbols[2]))
         
         return c
-
+    '''
+    #to define gate: XX, YY, ZZ
+    '''
+    
     def two_qubit_unitary(self, bits, symbols):
         """Make a circuit that creates an arbitrary two qubit unitary."""
         c = Circuit(2)
