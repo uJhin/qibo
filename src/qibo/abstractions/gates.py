@@ -1007,6 +1007,12 @@ class FSWAP(Gate):
         self.init_args = [q0, q1]
 
 
+class RXX(ParametrizedGate):
+    def __init__(self, q0, q1, theta, trainable=True):
+        pass
+
+
+
 class fSim(ParametrizedGate):
     """The fSim gate defined in `arXiv:2001.08343 <https://arxiv.org/abs/2001.08343>`_.
 
