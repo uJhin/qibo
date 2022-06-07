@@ -1,5 +1,6 @@
 import numpy as np
-from functools import cached_property
+from functools import cached_property  # pylint: disable=E0611
+# TODO: Handle Python 3.7 because cached_property doesn't exist there
 from qibo.config import raise_error
 
 
